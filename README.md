@@ -1,2 +1,2 @@
 # haskell-tut
-Functional programming. Learning haskell from scratch
+Functional programming. Learning haskell
