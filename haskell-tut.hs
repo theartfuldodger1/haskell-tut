@@ -108,5 +108,177 @@ listTiems3 = [x * 3 | x <- [1..10], x * 3 <= 50] -- produce only values up to 50
 divisBy9and13 = [x | x <- [1..500], x `mod` 13 == 0, x `mod` 9 == 0] -- only vals div by 13 AND by 9
 
 sortedList = sort [9,1,8,3,4,7,6]
-
 sumOfLists = zipWith (+) [1,2,3,4,5] [6,7,8,9,10]
+
+listBiggerThan5 = filter (>5) morePrimes
+evensUpTo20 = takeWhile (<= 20) [2,4..]
+multOfList = foldl (*) 1 [2,3,4,5] -- from left. for from right 'foldr'
+
+pow3List = [3^n | n <- [1..10]]
+multTable = [[x * y | y <- [1..10]] | x <- [1..10]]
+
+--tupls can store more than one data type
+randTuple = (1, "Random Tuple")
+
+bobSmith = ("Bob Smith", 52) -- tuple pairs
+bobsName = fst bobSmith -- prints Bob Smith
+bobsAge = snd bobSmith -- prints age
+names = ["Bob", "Mary", "Tom"]
+addresses = ["123 Main", "234 North", "567 South"]
+namesNAddress = zip names addresses
+
+{---
+can do calculations in the GHC also
+Prelude> let num7 = 7
+Prelude> let getTriple x = x * 3
+Prelude> getTriple num7
+21
+-}
+
+main = do
+   putStrLn "What's your name"
+   name <- getLine
+   putStrLn ("Hello " ++ name)
+
+-- two ways to compile and create a .exe in windows
+-- in command prompt, type
+-- ghc haskell-tut
+-- OR
+-- ghc --make haskell-tut
+-- second one seems more proper
+
+-- in windows command prompt type haskell-tut.exe to execute
+-- in linux, ./haskell-tut
+
+-- Type declaration
+addMe :: Int -> Int -> Int
+-- recieves an int and another int and returns an int
+-- every function must return something. Funcs cannot start with a capital letter
+-- creating a function - template is as follows
+-- funcName param1 param2 = operations (returned value)
+addMe x y = x + y
+
+-- funcs that do not recieve params are called a definition or a 'name'
+
+-- let haskell figure it out!
+sumMe x y = x + y
+
+addTuples :: (Int, Int) -> (Int, Int) -> (Int, Int)
+addTuples (x, y) (x2, y2) = (x + x2, y + y2)
+
+whatAge :: Int -> String
+
+whatAge 16 = "You can drive"
+whatAge 18 = "You can vote"
+whatAge 21 = "You're an adult"
+whatAge _ = "Nothing important" --underscore
+
+-- recursion
+factorial :: Int -> Int
+factorial 0 = 1
+factorial n = n * factorial (n - 1)
+
+prodFact n = product [1..n]
+
+-- Guards
+isOdd :: Int -> Bool
+isOdd n | n `mod` 2 == 0 = False | otherwise = True
+
+isEven n = n `mod` 2 == 0
+
+whatGrade :: Int -> String
+whatGrade age 
+    | (age > 6) && (age <= 10) = "Elementary School"
+    | (age > 10) && (age <= 14) = "Middle School"
+    | (age > 14) && (age <= 18) = "High School"
+    | otherwise = "Go to college!"
+
+
+-- Using "where"
+batAvgRating :: Double -> Double -> String
+batAvgRating hits atBats
+    | avg <= 0.200 = "Terrible Batting Average"
+    | avg <= 0.250 = "Average Player"
+    | avg <= 0.280 = "You're doing pretty good"
+    | otherwise = "You're a superstare"
+    where avg = hits / atBats
+
+-- accessing lsit items
+getListItems  :: [Int] -> String
+getListItems [] = "Your list is empty"
+getListItems (x:[]) = "Your list starts with " ++ show x
+getListItems (x:y:[]) = "Your list starts with " ++ show x ++ " and " ++ show y
+getListItems (x:xs) = "The 1st item is " ++ show x ++ " and the rest are " ++ show xs
+
+getFirstItem :: String -> String
+getFirstItem [] = "Empty String"
+getFirstItem all@(x:xs) = "The first letter in " ++ all ++ " is " ++ [x]
+
+times4 :: Int -> Int
+times4 x = x * 4
+
+listTimes4 = map times4 [1,2,3,4,5]
+
+multBy4 :: [Int] -> [Int]
+multBy4 [] = []
+multBy4 (x:xs) = times4 x : multBy4 xs
+
+{-
+[1,2,3,4] : x = 1 | xs = [2,3,4]
+[2,3,4] : x = 2 | xs = [3,4]
+[3,4] : x = 3 | xs = [4]
+[4] : x = 4
+-}
+
+areStringsEq :: [Char] -> [Char] -> Bool
+areStringsEq [] [] = True
+areStringsEq (x:xs) (y:ys) = x == y && areStringsEq xs ys
+areStringsEq _ _ = False
+
+-- Passing funcs into funcs
+doMult :: (Int -> Int) -> Int
+doMult func = func 3
+num3Times4 = doMult times4
+
+getAddFunc :: Int -> (Int ->  Int)
+getAddFunc x y = x + y
+adds3 = getAddFunc 3
+fourPlus3 = adds3 4
+threePlusList = map adds3 [1,2,3,4,5]
+
+--Lambdas
+dbl1To10 = map (\x -> x * 2) [1..10]
+
+-- Comparison operators
+-- Not equal /=
+-- && || not
+
+--if statements
+doubleEvenNumber y = 
+    if (y `mod` 2 /= 0)
+        then y
+        else y * 2      -- required with if statements
+
+getClass :: Int -> String
+getClass n = case n of
+	5 -> "Go to Kindergarten"
+	6 -> "Go to elementary school"
+	_ -> "Go away!"
+
+-- modules - like Data.List, System.IO 
+-- contain a bunch of other functions and are imported into where you want to use them
+-- defined as follows
+-- module SampFunctions (getClass, doubleEvenNumbers) where
+	--blah blah blah - list the functions here...
+
+-- enumerated types...
+data BaseballPlayer = Pitcher
+                    | Catcher
+                    | Infielder
+                    | Outfield
+                deriving Show
+
+barryBonds ::BaseballPlayer -> Bool
+barryBonds Outfield = True
+
+barryInOF = print(barryBonds Outfield)
